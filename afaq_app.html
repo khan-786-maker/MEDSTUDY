@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedStudy Pakistan - Interactive Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+:root{--p:#1a56db;--pl:#e1effe;--a:#10b981;--al:#d1fae5;--bg:#f8fafc;--s:#fff;--t:#1e293b;--ts:#64748b;--b:#e2e8f0;--d:#ef4444;--w:#f59e0b}
+body{background:#0f172a;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+.phone{width:390px;height:844px;background:var(--bg);border-radius:40px;border:12px solid #1e293b;box-shadow:0 25px 80px rgba(0,0,0,0.5);overflow:hidden;position:relative}
+.scr{width:100%;height:100%;overflow-y:auto;position:absolute;top:0;left:0;background:var(--bg);display:none;padding-bottom:80px}
+.scr.active{display:block}
+.scr::-webkit-scrollbar{width:0}
+.sb{height:44px;background:var(--s);display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-size:14px;font-weight:600;color:var(--t)}
+
+.splash{display:flex!important;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a56db,#1e40af);color:#fff}
+.sl{width:100px;height:100px;background:#fff;border-radius:28px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 20px 40px rgba(0,0,0,0.2)}
+.sl svg{width:60px;height:60px}
+.splash h1{font-size:28px;font-weight:800;margin-bottom:6px}
+.splash p{font-size:14px;opacity:.9}
+.sd{display:flex;gap:8px;margin-top:40px}
+.sd div{width:8px;height:8px;background:rgba(255,255,255,0.4);border-radius:50%;animation:p 1.4s infinite}
+.sd div:nth-child(2){animation-delay:.2s}
+.sd div:nth-child(3){animation-delay:.4s}
+@keyframes p{0%,100%{opacity:.4}50%{opacity:1}}
+
+.ob{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 30px;text-align:center}
+.ob-img{width:180px;height:180px;background:var(--pl);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:32px}
+.ob-img svg{width:80px;height:80px;color:var(--p)}
+.ob h2{font-size:24px;font-weight:700;color:var(--t);margin-bottom:12px}
+.ob p{font-size:15px;color:var(--ts);line-height:1.6}
+.ob-d{display:flex;gap:8px;margin-top:32px}
+.ob-d div{width:8px;height:8px;border-radius:50%;background:var(--b);transition:all .3s}
+.ob-d div.on{width:24px;border-radius:4px;background:var(--p)}
+.skip{position:absolute;top:60px;right:24px;background:none;border:none;color:var(--ts);font-size:14px;cursor:pointer}
+
+.btn{width:100%;padding:16px;background:var(--p);color:#fff;border:none;border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-top:24px;transition:all .2s}
+.btn:hover{background:#1e40af}
+.btn-o{width:100%;padding:16px;background:transparent;color:var(--p);border:2px solid var(--p);border-radius:16px;font-size:16px;font-weight:600;cursor:pointer;margin-top:12px}
+
+.ah{padding:40px 24px 20px;text-align:center}
+.ah h2{font-size:26px;font-weight:700;color:var(--t);margin-bottom:8px}
+.ah p{color:var(--ts);font-size:14px}
+.af{padding:0 24px}
+.ig{margin-bottom:16px}
+.ig label{display:block;font-size:13px;font-weight:600;color:var(--ts);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.ig input{width:100%;padding:14px 16px;border:2px solid var(--b);border-radius:14px;font-size:15px;outline:none;transition:all .2s;background:var(--s)}
+.ig input:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--pl)}
+.gbtn{width:100%;padding:14px;background:var(--s);border:2px solid var(--b);border-radius:14px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:15px;font-weight:600;color:var(--t);cursor:pointer;margin-top:16px}
+.div{display:flex;align-items:center;gap:16px;margin:24px 0;color:var(--ts);font-size:13px}
+.div::before,.div::after{content:'';flex:1;height:1px;background:var(--b)}
+.aft{text-align:center;padding:24px;font-size:14px;color:var(--ts)}
+.aft a{color:var(--p);font-weight:600;text-decoration:none}
+
+.hh{background:linear-gradient(135deg,var(--p),#1e40af);padding:20px 20px 30px;border-radius:0 0 30px 30px;color:#fff}
+.ht{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.hp{display:flex;align-items:center;gap:12px}
+.pimg{width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--p);font-size:18px}
+.hp div h3{font-size:16px;font-weight:600}
+.hp div p{font-size:12px;opacity:.8}
+.nbtn{width:40px;height:40px;background:rgba(255,255,255,0.15);border:none;border-radius:12px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+.nbd{position:absolute;top:-2px;right:-2px;width:18px;height:18px;background:var(--d);border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center}
+.sbar{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.15);padding:12px 16px;border-radius:14px;backdrop-filter:blur(10px)}
+.sbar input{background:none;border:none;color:#fff;font-size:15px;outline:none;width:100%}
+.sbar input::placeholder{color:rgba(255,255,255,0.7)}
+
+.sec{padding:20px}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.st{font-size:18px;font-weight:700;color:var(--t)}
+.sa{font-size:13px;color:var(--p);font-weight:600;background:none;border:none;cursor:pointer}
+
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:8px}
+.qac{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+.qai{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.qab{background:var(--pl)}
+.qag{background:var(--al)}
+.qao{background:#fef3c7}
+.qap{background:#f3e8ff}
+.qac span{font-size:12px;font-weight:600;color:var(--t)}
+
+.yc{display:flex;flex-direction:column;gap:12px}
+.yca{background:var(--s);border-radius:20px;padding:20px;display:flex;align-items:center;gap:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04);cursor:pointer;transition:all .2s;border:2px solid transparent}
+.yca:hover{border-color:var(--p);transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,86,219,0.1)}
+.yi{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--p),#3b82f6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0}
+.yin{flex:1}
+.yin h4{font-size:16px;font-weight:700;color:var(--t);margin-bottom:4px}
+.yin p{font-size:13px;color:var(--ts)}
+.yp{width:60px;text-align:center}
+.pr{width:48px;height:48px;margin:0 auto 4px}
+.pr circle{fill:none;stroke-width:4}
+.pr .bg{stroke:var(--b)}
+.pr .fg{stroke:var(--a);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}
+.yp span{font-size:12px;font-weight:700;color:var(--a)}
+
+.rc{display:flex;align-items:center;gap:14px;padding:14px;background:var(--s);border-radius:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03);cursor:pointer}
+.rt{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ri h4{font-size:14px;font-weight:600;color:var(--t)}
+.ri p{font-size:12px;color:var(--ts);margin-top:2px}
+.rp{width:50px;text-align:right}
+.rp span{font-size:12px;font-weight:700;color:var(--p)}
+.mb{width:100%;height:4px;background:var(--b);border-radius:2px;margin-top:4px;overflow:hidden}
+.mbf{height:100%;background:var(--p);border-radius:2px}
+
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sc{background:var(--s);border-radius:20px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,0.04);cursor:pointer;transition:all .2s}
+.sc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.sth{width:100%;height:90px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:12px}
+.sc h4{font-size:14px;font-weight:700;color:var(--t);margin-bottom:4px}
+.sc p{font-size:12px;color:var(--ts)}
+.sm{display:flex;gap:8px;margin-top:8px}
+.sm span{font-size:11px;padding:4px 8px;background:var(--bg);border-radius:8px;color:var(--ts);font-weight:500}
+
+.cl{padding:0 20px}
+.ci{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s);border-radius:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03);cursor:pointer}
+.cc{width:28px;height:28px;border-radius:50%;border:2px solid var(--b);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--a);font-size:14px}
+.cc.d{background:var(--a);border-color:var(--a);color:#fff}
+.cin{flex:1}
+.cin h4{font-size:15px;font-weight:600;color:var(--t)}
+.cin p{font-size:12px;color:var(--ts);margin-top:2px}
+.cm{display:flex;gap:6px}
+.cm span{font-size:11px;padding:3px 8px;background:var(--bg);border-radius:6px;color:var(--ts)}
+
+.mh{background:var(--s);padding:16px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:12px}
+.bb{width:40px;height:40px;border:none;background:var(--bg);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:var(--t)}
+.mh h3{font-size:18px;font-weight:700;flex:1}
+.mtm{background:var(--pl);color:var(--p);padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700}
+.mbod{padding:20px}
+.qc{background:var(--s);border-radius:20px;padding:24px;margin-bottom:20px;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.qn{font-size:12px;font-weight:700;color:var(--p);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.qt{font-size:16px;font-weight:600;color:var(--t);line-height:1.6}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s);border:2px solid var(--b);border-radius:16px;cursor:pointer;transition:all .2s}
+.opt:hover{border-color:var(--p)}
+.opt.sel{border-color:var(--p);background:var(--pl)}
+.opt.cor{border-color:var(--a);background:var(--al)}
+.opt.wrg{border-color:var(--d);background:#fef2f2}
+.ol{width:36px;height:36px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:var(--t);flex-shrink:0}
+.opt.sel .ol{background:var(--p);color:#fff}
+.opt.cor .ol{background:var(--a);color:#fff}
+.opt.wrg .ol{background:var(--d);color:#fff}
+.ot{font-size:15px;font-weight:500;color:var(--t)}
+.exp{background:var(--al);border-left:4px solid var(--a);padding:16px;border-radius:0 12px 12px 0;margin-top:16px;display:none}
+.exp.on{display:block}
+.exp h5{color:var(--a);font-size:13px;font-weight:700;margin-bottom:6px}
+.exp p{color:var(--t);font-size:14px;line-height:1.5}
+.mact{display:flex;gap:12px;padding:0 20px 20px}
+.mact button{flex:1;padding:14px;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;border:none}
+.bbm{background:var(--bg);color:var(--t)}
+.bnx{background:var(--p);color:#fff}
+
+.ph{background:linear-gradient(135deg,var(--p),#1e40af);padding:30px 20px;text-align:center;color:#fff;border-radius:0 0 30px 30px}
+.pa{width:90px;height:90px;background:#fff;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--p);font-weight:700;border:4px solid rgba(255,255,255,0.3)}
+.ph h2{font-size:22px;font-weight:700;margin-bottom:4px}
+.ph p{opacity:.85;font-size:14px}
+.sr{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px;margin-top:-20px}
+.stc{background:var(--s);border-radius:16px;padding:16px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.06)}
+.sv{font-size:22px;font-weight:800;color:var(--p)}
+.slbl{font-size:12px;color:var(--ts);margin-top:4px;font-weight:500}
+.ml{padding:0 20px}
+.mi{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s);border-radius:14px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.mi:hover{background:var(--pl)}
+.mic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.mic.b{background:var(--pl)}
+.mic.g{background:var(--al)}
+.mic.o{background:#fef3c7}
+.mic.r{background:#fef2f2}
+.min{flex:1}
+.min h4{font-size:15px;font-weight:600;color:var(--t)}
+.min p{font-size:13px;color:var(--ts)}
+.ma{color:var(--ts)}
+
+.stc2{padding:20px;display:flex;flex-direction:column;gap:12px}
+.stcat{display:flex;align-items:center;gap:16px;padding:20px;background:var(--s);border-radius:18px;box-shadow:0 2px 12px rgba(0,0,0,0.04);cursor:pointer;transition:all .2s}
+.stcat:hover{transform:translateX(4px)}
+.sti{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.stin h4{font-size:16px;font-weight:700;color:var(--t);margin-bottom:4px}
+.stin p{font-size:13px;color:var(--ts)}
+
+.btabs{display:flex;gap:8px;padding:16px 20px;overflow-x:auto}
+.btab{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;border:none;cursor:pointer;white-space:nowrap;transition:all .2s}
+.btab.on{background:var(--p);color:#fff}
+.btab:not(.on){background:var(--s);color:var(--ts);border:1px solid var(--b)}
+.blst{padding:0 20px}
+.bitem{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s);border-radius:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
+.bth{width:50px;height:50px;border-radius:12px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.bin{flex:1}
+.bin h4{font-size:14px;font-weight:600;color:var(--t)}
+.bin p{font-size:12px;color:var(--ts);margin-top:2px}
+.bdel{width:36px;height:36px;border:none;background:#fef2f2;border-radius:10px;color:var(--d);cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+.ahd{background:linear-gradient(135deg,#1e293b,#0f172a);padding:24px 20px;color:#fff;border-radius:0 0 24px 24px}
+.ahd h2{font-size:22px;font-weight:700}
+.ahd p{opacity:.7;font-size:14px;margin-top:4px}
+.ag{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:20px}
+.adc{background:var(--s);border-radius:18px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(0,0,0,0.04)}
+.adc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.adi{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px}
+.adc h4{font-size:14px;font-weight:700;color:var(--t)}
+.adc p{font-size:12px;color:var(--ts);margin-top:4px}
+.adn{display:inline-block;padding:4px 12px;background:var(--pl);color:var(--p);border-radius:20px;font-size:12px;font-weight:700;margin-top:8px}
+
+.rci{width:160px;height:160px;border-radius:50%;background:conic-gradient(var(--a) 0% 75%,var(--b) 75% 100%);margin:30px auto;display:flex;align-items:center;justify-content:center;position:relative}
+.rci::before{content:'';position:absolute;width:130px;height:130px;background:var(--bg);border-radius:50%}
+.rsc{position:relative;z-index:1;text-align:center}
+.rsc h2{font-size:36px;font-weight:800;color:var(--a)}
+.rsc p{font-size:14px;color:var(--ts);font-weight:600}
+.rsts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 20px 20px}
+.rst{background:var(--s);border-radius:16px;padding:16px;text-align:center}
+.rst h4{font-size:22px;font-weight:800}
+.rst p{font-size:12px;color:var(--ts);font-weight:500;margin-top:4px}
+.rst.c h4{color:var(--a)}
+.rst.w h4{color:var(--d)}
+.rst.t h4{color:var(--p)}
+.rst.s h4{color:var(--w)}
+
+.sbar{display:flex;justify-content:center;gap:8px;padding:20px}
+.sday{display:flex;flex-direction:column;align-items:center;gap:6px}
+.sdot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.sdot.a{background:var(--a);color:#fff}
+.sdot.i{background:var(--b);color:var(--ts)}
+.sdot.td{background:var(--p);color:#fff;box-shadow:0 0 0 3px var(--pl)}
+.sday span{font-size:11px;color:var(--ts);font-weight:500}
+
+.bn{position:absolute;bottom:0;left:0;right:0;height:70px;background:var(--s);border-top:1px solid var(--b);display:flex;justify-content:space-around;align-items:center;padding:0 8px;z-index:100}
+.ni{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 16px;cursor:pointer;border:none;background:none;color:var(--ts);transition:all .2s}
+.ni.on{color:var(--p)}
+.ni svg{width:24px;height:24px}
+.ni span{font-size:11px;font-weight:600}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(100px);background:#1e293b;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:500;opacity:0;transition:all .3s;z-index:1000;pointer-events:none}
+.toast.on{transform:translateX(-50%) translateY(0);opacity:1}
+
+.es{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center}
+.es svg{width:80px;height:80px;color:var(--b);margin-bottom:20px}
+.es h3{font-size:18px;font-weight:700;color:var(--t);margin-bottom:8px}
+.es p{font-size:14px;color:var(--ts);max-width:260px}
+
+.pvt{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--s);border-bottom:1px solid var(--b)}
+.pvt div{flex:1;text-align:center}
+.pvt h4{font-size:14px;font-weight:700}
+.pvt p{font-size:11px;color:var(--ts)}
+.ptb{display:flex;gap:8px}
+.ptl{width:36px;height:36px;border:none;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+.pv{background:#f1f5f9;height:380px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.pp{width:280px;height:340px;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.1);padding:30px}
+.pp h3{font-size:16px;font-weight:700;color:var(--t);margin-bottom:12px}
+.pp p{font-size:13px;color:var(--ts);line-height:1.7}
+
+.sch{padding:16px 20px}
+.sch .sbar{background:var(--bg);border:2px solid var(--b);padding:12px 16px}
+.sch .sbar input{color:var(--t)}
+.sch .sbar input::placeholder{color:var(--ts)}
+.shist{padding:0 20px}
+.shi{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--b);cursor:pointer}
+.shi span{font-size:14px;color:var(--ts)}
+.shi p{flex:1;font-size:14px;color:var(--t)}
+
+.nlst{padding:0 20px}
+.nit{display:flex;align-items:flex-start;gap:14px;padding:16px;background:var(--s);border-radius:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03)}
+.nic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.nin{flex:1}
+.nin h4{font-size:14px;font-weight:600;color:var(--t)}
+.nin p{font-size:13px;color:var(--ts);margin-top:2px}
+.ntm{font-size:11px;color:var(--ts);white-space:nowrap}
+
+.stg{padding:0 20px}
+.sti2{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s);border-radius:14px;margin-bottom:8px;cursor:pointer}
+.sti2:hover{background:var(--pl)}
+.stgl{flex:1}
+.stgl h4{font-size:15px;font-weight:600;color:var(--t)}
+.stgl p{font-size:13px;color:var(--ts)}
+.tog{width:48px;height:28px;background:var(--b);border-radius:14px;position:relative;cursor:pointer;transition:all .2s;flex-shrink:0}
+.tog.on{background:var(--p)}
+.tog::after{content:'';position:absolute;width:24px;height:24px;background:#fff;border-radius:50%;top:2px;left:2px;transition:all .2s;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+.tog.on::after{left:22px}
+
+.pf{display:flex;gap:8px;padding:16px 20px;overflow-x:auto}
+.pft{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;border:none;cursor:pointer;white-space:nowrap}
+.pft.on{background:var(--p);color:#fff}
+.pft:not(.on){background:var(--s);color:var(--ts);border:1px solid var(--b)}
+.plst{padding:0 20px}
+.pit{display:flex;align-items:center;gap:14px;padding:16px;background:var(--s);border-radius:16px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,0.03);cursor:pointer}
+.pit:hover{transform:translateX(4px)}
+.piic{width:48px;height:48px;border-radius:12px;background:var(--pl);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.piin{flex:1}
+.piin h4{font-size:14px;font-weight:600;color:var(--t)}
+.piin p{font-size:12px;color:var(--ts);margin-top:2px}
+.pitg{display:flex;gap:6px;margin-top:6px}
+.pitg span{font-size:11px;padding:3px 8px;background:var(--bg);border-radius:6px;color:var(--ts)}
+
+.mpm{padding:20px}
+.mpc{display:flex;align-items:center;gap:16px;padding:18px;background:var(--s);border-radius:18px;margin-bottom:12px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.04);transition:all .2s}
+.mpc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.mpi{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.mpin h4{font-size:16px;font-weight:700;color:var(--t);margin-bottom:4px}
+.mpin p{font-size:13px;color:var(--ts)}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="sb"><span>9:41</span><span>&#128267; 85%</span></div>
+
+  <!-- Splash -->
+  <div class="scr splash active" id="splash">
+    <div class="sl"><svg viewBox="0 0 24 24" fill="none" stroke="#1a56db" stroke-width="2.5" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+    <h1>MedStudy</h1><p>Pakistan</p>
+    <div class="sd"><div></div><div></div><div></div></div>
+  </div>
+
+  <!-- Onboarding 1 -->
+  <div class="scr" id="ob1">
+    <button class="skip" onclick="go('login')">Skip</button>
+    <div class="ob">
+      <div class="ob-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+      <h2>Complete MBBS Curriculum</h2><p>Access all 5 years of medical education with organized subjects, chapters, notes, and MCQs.</p>
+      <div class="ob-d"><div class="on"></div><div></div><div></div></div>
+      <button class="btn" onclick="go('ob2')">Next</button>
+    </div>
+  </div>
+
+  <!-- Onboarding 2 -->
+  <div class="scr" id="ob2">
+    <button class="skip" onclick="go('login')">Skip</button>
+    <div class="ob">
+      <div class="ob-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <h2>Practice with Smart MCQs</h2><p>Timed quizzes, mock tests, and detailed explanations. Track your progress instantly.</p>
+      <div class="ob-d"><div></div><div class="on"></div><div></div></div>
+      <button class="btn" onclick="go('ob3')">Next</button>
+    </div>
+  </div>
+
+  <!-- Onboarding 3 -->
+  <div class="scr" id="ob3">
+    <div class="ob">
+      <div class="ob-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <h2>Study Offline Anywhere</h2><p>Download notes, past papers, and videos. Your progress syncs when you are back online.</p>
+      <div class="ob-d"><div></div><div></div><div class="on"></div></div>
+      <button class="btn" onclick="go('login')">Get Started</button>
+    </div>
+  </div>
+
+  <!-- Login -->
+  <div class="scr" id="login">
+    <div class="ah"><h2>Welcome Back</h2><p>Sign in to continue your medical journey</p></div>
+    <div class="af">
+      <div class="ig"><label>Email</label><input type="email" placeholder="student@kemu.edu.pk"></div>
+      <div class="ig"><label>Password</label><input type="password" placeholder="password"></div>
+      <button class="btn" onclick="doLogin()">Sign In</button>
+      <div class="div">or</div>
+      <button class="gbtn" onclick="doLogin()">Google Sign In</button>
+    </div>
+    <div class="aft"><a href="#" onclick="go('forgot')">Forgot Password?</a><br><br>Do not have an account? <a href="#" onclick="go('register')">Sign Up</a></div>
+  </div>
+
+  <!-- Register -->
+  <div class="scr" id="register">
+    <div class="ah"><h2>Create Account</h2><p>Join thousands of medical students</p></div>
+    <div class="af">
+      <div class="ig"><label>Full Name</label><input type="text" placeholder="Dr. Ahmed Khan"></div>
+      <div class="ig"><label>Email</label><input type="email" placeholder="student@kemu.edu.pk"></div>
+      <div class="ig"><label>Medical College</label><input type="text" placeholder="King Edward Medical University"></div>
+      <div class="ig"><label>Password</label><input type="password" placeholder="password"></div>
+      <button class="btn" onclick="doLogin()">Create Account</button>
+      <div class="div">or</div>
+      <button class="gbtn" onclick="doLogin()">Google Sign Up</button>
+    </div>
+    <div class="aft">Already have an account? <a href="#" onclick="go('login')">Sign In</a></div>
+  </div>
+
+  <!-- Forgot -->
+  <div class="scr" id="forgot">
+    <div class="ah"><h2>Reset Password</h2><p>Enter your email to receive reset instructions</p></div>
+    <div class="af">
+      <div class="ig"><label>Email</label><input type="email" placeholder="student@kemu.edu.pk"></div>
+      <button class="btn" onclick="toast('Reset link sent!');go('login')">Send Reset Link</button>
+      <button class="btn-o" onclick="go('login')">Back to Login</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="scr" id="home">
+    <div class="hh">
+      <div class="ht">
+        <div class="hp">
+          <div class="pimg">AK</div>
+          <div><h3>Welcome back, Ahmed</h3><p>3rd Year MBBS - KEMU</p></div>
+        </div>
+        <button class="nbtn" onclick="go('notif')">&#128276;<div class="nbd">3</div></button>
+      </div>
+      <div class="sbar" onclick="go('search')"><span>&#128269;</span><input placeholder="Search subjects, notes, MCQs..." readonly></div>
+    </div>
+    <div class="sec">
+      <div class="sh"><span class="st">Quick Actions</span></div>
+      <div class="qa">
+        <div class="qac" onclick="go('mcqMenu')"><div class="qai qab">&#128221;</div><span>MCQs</span></div>
+        <div class="qac" onclick="go('papers')"><div class="qai qag">&#128196;</div><span>Papers</span></div>
+        <div class="qac" onclick="go('study')"><div class="qai qao">&#128218;</div><span>Notes</span></div>
+        <div class="qac" onclick="go('bookmarks')"><div class="qai qap">&#128278;</div><span>Saved</span></div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sh"><span class="st">Continue Learning</span><button class="sa">See All</button></div>
+      <div class="rc" onclick="go('pdf')"><div class="rt">&#128153;</div><div class="ri"><h4>Cardiac Cycle & Heart Sounds</h4><p>Physiology - Chapter 4</p></div><div class="rp"><span>65%</span><div class="mb"><div class="mbf" style="width:65%"></div></div></div></div>
+      <div class="rc" onclick="go('mcq')"><div class="rt">&#129516;</div><div class="ri"><h4>DNA Replication Quiz</h4><p>Biochemistry - 12/20 done</p></div><div class="rp"><span>60%</span><div class="mb"><div class="mbf" style="width:60%"></div></div></div></div>
+    </div>
+    <div class="sec">
+      <div class="sh"><span class="st">Academic Years</span></div>
+      <div class="yc">
+        <div class="yca" onclick="go('subjects')"><div class="yi">1</div><div class="yin"><h4>1st Year MBBS</h4><p>Anatomy, Physiology, Biochemistry</p></div><div class="yp"><svg class="pr" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="31.4"/></svg><span>75%</span></div></div>
+        <div class="yca" onclick="go('subjects')"><div class="yi" style="background:linear-gradient(135deg,#10b981,#059669)">2</div><div class="yin"><h4>2nd Year MBBS</h4><p>Pathology, Pharmacology, Microbiology</p></div><div class="yp"><svg class="pr" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="75.4" style="stroke:#10b981"/></svg><span style="color:#10b981">40%</span></div></div>
+        <div class="yca" onclick="go('subjects')"><div class="yi" style="background:linear-gradient(135deg,#f59e0b,#d97706)">3</div><div class="yin"><h4>3rd Year MBBS</h4><p>Community Medicine, Forensic Medicine</p></div><div class="yp"><svg class="pr" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="113" style="stroke:#f59e0b"/></svg><span style="color:#f59e0b">10%</span></div></div>
+        <div class="yca" onclick="go('subjects')"><div class="yi" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">4</div><div class="yin"><h4>4th Year MBBS</h4><p>Medicine, Surgery, ENT, Ophthalmology</p></div><div class="yp"><svg class="pr" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="125.6" style="stroke:#8b5cf6"/></svg><span style="color:#8b5cf6">0%</span></div></div>
+        <div class="yca" onclick="go('subjects')"><div class="yi" style="background:linear-gradient(135deg,#ec4899,#db2777)">5</div><div class="yin"><h4>Final Year MBBS</h4><p>Medicine, Surgery, Pediatrics, Gynecology</p></div><div class="yp"><svg class="pr" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="125.6" style="stroke:#ec4899"/></svg><span style="color:#ec4899">0%</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDY -->
+  <div class="scr" id="study">
+    <div style="padding:20px 20px 10px"><div class="sh"><span class="st">Study Materials</span></div></div>
+    <div class="stc2">
+      <div class="stcat" onclick="go('subjects')"><div class="sti" style="background:var(--pl)">&#128214;</div><div class="stin"><h4>Subjects & Chapters</h4><p>Browse by year and subject</p></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="stcat" onclick="go('pdf')"><div class="sti" style="background:var(--al)">&#128221;</div><div class="stin"><h4>Notes & PDFs</h4><p>124 documents available</p></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="stcat"><div class="sti" style="background:#fef3c7">&#127909;</div><div class="stin"><h4>Video Lectures</h4><p>86 lecture videos</p></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="stcat" onclick="go('papers')"><div class="sti" style="background:#f3e8ff">&#128196;</div><div class="stin"><h4>Past Papers</h4><p>Annual & supplementary exams</p></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="stcat"><div class="sti" style="background:#fef2f2">&#10067;</div><div class="stin"><h4>Important Questions</h4><p>Frequently asked exam questions</p></div><span style="color:var(--ts)">&#8250;</span></div>
+    </div>
+  </div>
+
+  <!-- SUBJECTS -->
+  <div class="scr" id="subjects">
+    <div class="mh"><button class="bb" onclick="go('home')">&#8249;</button><h3>1st Year MBBS</h3><span></span></div>
+    <div style="padding:16px 20px"><div class="sbar" style="background:var(--bg);border:2px solid var(--b)"><span>&#128269;</span><input placeholder="Search subjects..." style="color:var(--t)"></div></div>
+    <div class="sec">
+      <div class="sg">
+        <div class="sc" onclick="go('chapters')"><div class="sth">&#128153;</div><h4>Anatomy</h4><p>12 chapters - 340 MCQs</p><div class="sm"><span>45 notes</span><span>18 videos</span></div></div>
+        <div class="sc" onclick="go('chapters')"><div class="sth" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">&#9889;</div><h4>Physiology</h4><p>10 chapters - 280 MCQs</p><div class="sm"><span>38 notes</span><span>15 videos</span></div></div>
+        <div class="sc" onclick="go('chapters')"><div class="sth" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">&#129516;</div><h4>Biochemistry</h4><p>8 chapters - 220 MCQs</p><div class="sm"><span>30 notes</span><span>12 videos</span></div></div>
+        <div class="sc" onclick="go('chapters')"><div class="sth" style="background:linear-gradient(135deg,#fce7f3,#fbcfe8)">&#129461;</div><h4>Histology</h4><p>6 chapters - 150 MCQs</p><div class="sm"><span>20 notes</span><span>8 videos</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHAPTERS -->
+  <div class="scr" id="chapters">
+    <div class="mh"><button class="bb" onclick="go('subjects')">&#8249;</button><h3>Anatomy</h3><span style="font-size:13px;color:var(--ts);font-weight:600">12 Chapters</span></div>
+    <div class="cl">
+      <div class="ci" onclick="go('pdf')"><div class="cc d">&#10003;</div><div class="cin"><h4>Introduction to Anatomy</h4><p>Basic terminology and anatomical positions</p><div class="cm"><span>4 notes</span><span>12 MCQs</span><span>2 videos</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="ci" onclick="go('pdf')"><div class="cc d">&#10003;</div><div class="cin"><h4>Upper Limb</h4><p>Bones, muscles, vessels, and nerves</p><div class="cm"><span>8 notes</span><span>35 MCQs</span><span>5 videos</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="ci" onclick="go('pdf')"><div class="cc">&#10003;</div><div class="cin"><h4>Lower Limb</h4><p>Bones, muscles, vessels, and nerves</p><div class="cm"><span>7 notes</span><span>30 MCQs</span><span>4 videos</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="ci" onclick="go('pdf')"><div class="cc">&#10003;</div><div class="cin"><h4>Thorax</h4><p>Heart, lungs, and mediastinum</p><div class="cm"><span>6 notes</span><span>28 MCQs</span><span>3 videos</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="ci" onclick="go('pdf')"><div class="cc">&#10003;</div><div class="cin"><h4>Abdomen</h4><p>GI tract, liver, kidneys, and pelvis</p><div class="cm"><span>9 notes</span><span>40 MCQs</span><span>6 videos</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+    </div>
+  </div>
+
+  <!-- PDF VIEWER -->
+  <div class="scr" id="pdf">
+    <div class="pvt"><button class="bb" onclick="go('chapters')">&#8249;</button><div><h4>Cardiac Cycle</h4><p>Physiology - Ch.4 - Page 3/12</p></div><div class="ptb"><button class="ptl">&#128278;</button><button class="ptl">&#11015;</button><button class="ptl">&#8942;</button></div></div>
+    <div class="pv">
+      <div class="pp">
+        <h3>Cardiac Cycle & Heart Sounds</h3>
+        <p>The cardiac cycle refers to the sequence of mechanical and electrical events that repeats with every heartbeat. It includes systole (contraction) and diastole (relaxation) of the atria and ventricles.</p><br>
+        <p><b>Key Points:</b></p>
+        <p>- Systole: Ventricular contraction<br>- Diastole: Ventricular relaxation<br>- S1 sound: Closure of AV valves<br>- S2 sound: Closure of semilunar valves</p><br>
+        <p>The duration of one cardiac cycle at normal heart rate (72 bpm) is approximately 0.8 seconds.</p>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:16px;padding:16px">
+      <button class="bb" style="width:44px;height:44px">&#9664;</button>
+      <span style="padding:10px 20px;background:var(--s);border-radius:12px;font-weight:600">3 / 12</span>
+      <button class="bb" style="width:44px;height:44px">&#9654;</button>
+    </div>
+  </div>
+
+  <!-- MCQ PRACTICE MENU -->
+  <div class="scr" id="mcqMenu">
+    <div class="mh"><button class="bb" onclick="go('home')">&#8249;</button><h3>MCQ Practice</h3><span></span></div>
+    <div class="mpm">
+      <div class="mpc" onclick="go('mcq')"><div class="mpi" style="background:var(--pl)">&#128221;</div><div class="mpin"><h4>Practice Mode</h4><p>Unlimited questions with instant feedback</p></div></div>
+      <div class="mpc" onclick="go('mcq')"><div class="mpi" style="background:#fef3c7">&#9201;</div><div class="mpin"><h4>Timed Quiz</h4><p>Test yourself against the clock</p></div></div>
+      <div class="mpc" onclick="go('mcq')"><div class="mpi" style="background:#f3e8ff">&#127919;</div><div class="mpin"><h4>Mock Test</h4><p>Simulate real exam conditions</p></div></div>
+      <div class="mpc" onclick="go('mcq')"><div class="mpi" style="background:#fef2f2">&#10060;</div><div class="mpin"><h4>Incorrect Questions</h4><p>Review questions you got wrong</p></div></div>
+      <div class="mpc" onclick="go('mcq')"><div class="mpi" style="background:var(--al)">&#128278;</div><div class="mpin"><h4>Bookmarked Questions</h4><p>Practice your saved questions</p></div></div>
+    </div>
+  </div>
+
+  <!-- MCQ SCREEN -->
+  <div class="scr" id="mcq">
+    <div class="mh"><button class="bb" onclick="go('mcqMenu')">&#8249;</button><h3>Physiology MCQs</h3><div class="mtm">&#9201; 04:32</div></div>
+    <div class="mbod">
+      <div class="qc">
+        <div class="qn">Question 5 of 20</div>
+        <div class="qt">During the cardiac cycle, which event occurs immediately after the closure of the semilunar valves?</div>
+        <div class="exp on"><h5>&#128161; Explanation</h5><p>Closure of semilunar valves marks the beginning of isovolumetric relaxation. The ventricles relax without changing volume until the AV valves open.</p></div>
+      </div>
+      <div class="opts">
+        <div class="opt cor"><div class="ol">A</div><div class="ot">Isovolumetric relaxation</div></div>
+        <div class="opt wrg"><div class="ol">B</div><div class="ot">Rapid ventricular filling</div></div>
+        <div class="opt"><div class="ol">C</div><div class="ot">Atrial contraction</div></div>
+        <div class="opt"><div class="ol">D</div><div class="ot">Isovolumetric contraction</div></div>
+      </div>
+    </div>
+    <div class="mact"><button class="bbm">&#128278; Bookmark</button><button class="bnx" onclick="go('result')">Next &#8250;</button></div>
+  </div>
+
+  <!-- QUIZ RESULT -->
+  <div class="scr" id="result">
+    <div class="mh"><button class="bb" onclick="go('mcqMenu')">&#8249;</button><h3>Quiz Results</h3><span></span></div>
+    <div class="rci"><div class="rsc"><h2>75%</h2><p>15 / 20 Correct</p></div></div>
+    <div class="rsts">
+      <div class="rst c"><h4>15</h4><p>Correct</p></div>
+      <div class="rst w"><h4>3</h4><p>Wrong</p></div>
+      <div class="rst t"><h4>04:32</h4><p>Time Taken</p></div>
+      <div class="rst s"><h4>2</h4><p>Skipped</p></div>
+    </div>
+    <div style="padding:0 20px 20px">
+      <button class="btn" onclick="go('mcqMenu')">Practice Again</button>
+      <button class="btn-o" onclick="go('home')">Back to Home</button>
+    </div>
+  </div>
+
+  <!-- PAST PAPERS -->
+  <div class="scr" id="papers">
+    <div class="mh"><button class="bb" onclick="go('home')">&#8249;</button><h3>Past Papers</h3><span></span></div>
+    <div class="pf">
+      <button class="pft on">All</button>
+      <button class="pft">Annual</button>
+      <button class="pft">Supplementary</button>
+      <button class="pft">Send-up</button>
+      <button class="pft">Midterm</button>
+    </div>
+    <div class="plst">
+      <div class="pit"><div class="piic">&#128196;</div><div class="piin"><h4>Anatomy Annual Exam 2024</h4><p>KEMU - 1st Year - Annual</p><div class="pitg"><span>Theory</span><span>OSPE</span><span>Oral</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="pit"><div class="piic" style="background:var(--al)">&#128196;</div><div class="piin"><h4>Physiology Supplementary 2023</h4><p>UMDC - 1st Year - Supp</p><div class="pitg"><span>Theory</span><span>OSPE</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="pit"><div class="piic" style="background:#fef3c7">&#128196;</div><div class="piin"><h4>Biochemistry Annual 2024</h4><p>FMH - 1st Year - Annual</p><div class="pitg"><span>Theory</span><span>MCQs</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="pit"><div class="piic" style="background:#f3e8ff">&#128196;</div><div class="piin"><h4>Anatomy Send-up 2024</h4><p>AIMC - 1st Year - Send-up</p><div class="pitg"><span>Theory</span><span>OSPE</span><span>Oral</span></div></div><span style="color:var(--ts)">&#8250;</span></div>
+    </div>
+  </div>
+
+  <!-- BOOKMARKS -->
+  <div class="scr" id="bookmarks">
+    <div style="padding:20px 20px 10px"><div class="sh"><span class="st">Bookmarks</span></div></div>
+    <div class="btabs">
+      <button class="btab on">All</button>
+      <button class="btab">Notes</button>
+      <button class="btab">MCQs</button>
+      <button class="btab">Videos</button>
+      <button class="btab">Papers</button>
+    </div>
+    <div class="blst">
+      <div class="bitem"><div class="bth">&#128153;</div><div class="bin"><h4>Cardiac Cycle Notes</h4><p>Physiology - PDF - 2.4 MB</p></div><button class="bdel">&#128465;</button></div>
+      <div class="bitem"><div class="bth" style="background:var(--al)">&#129516;</div><div class="bin"><h4>DNA Replication MCQ #42</h4><p>Biochemistry - Medium Difficulty</p></div><button class="bdel">&#128465;</button></div>
+      <div class="bitem"><div class="bth" style="background:#fef3c7">&#127909;</div><div class="bin"><h4>Upper Limb Anatomy Lecture</h4><p>Anatomy - 45 min - Dr. Khan</p></div><button class="bdel">&#128465;</button></div>
+      <div class="bitem"><div class="bth" style="background:#f3e8ff">&#128196;</div><div class="bin"><h4>Anatomy Annual 2024</h4><p>KEMU - 1st Year - Annual</p></div><button class="bdel">&#128465;</button></div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="scr" id="profile">
+    <div class="ph"><div class="pa">AK</div><h2>Ahmed Khan</h2><p>3rd Year MBBS - KEMU - Lahore</p></div>
+    <div class="sr">
+      <div class="stc"><div class="sv">1,240</div><div class="slbl">MCQs Done</div></div>
+      <div class="stc"><div class="sv">78%</div><div class="slbl">Avg Score</div></div>
+      <div class="stc"><div class="sv">45</div><div class="slbl">Chapters</div></div>
+    </div>
+    <div style="padding:0 20px 12px"><div class="sh"><span class="st">Learning Streak</span></div></div>
+    <div class="sbar">
+      <div class="sday"><div class="sdot a">&#10003;</div><span>Mon</span></div>
+      <div class="sday"><div class="sdot a">&#10003;</div><span>Tue</span></div>
+      <div class="sday"><div class="sdot a">&#10003;</div><span>Wed</span></div>
+      <div class="sday"><div class="sdot td">4</div><span>Thu</span></div>
+      <div class="sday"><div class="sdot i">5</div><span>Fri</span></div>
+      <div class="sday"><div class="sdot i">6</div><span>Sat</span></div>
+      <div class="sday"><div class="sdot i">7</div><span>Sun</span></div>
+    </div>
+    <div style="text-align:center;padding-bottom:12px"><span style="font-size:14px;font-weight:700;color:var(--a)">&#128293; Current Streak: 3 days</span><span style="font-size:12px;color:var(--ts);margin-left:12px">Best: 12 days</span></div>
+    <div class="ml">
+      <div class="mi" onclick="go('settings')"><div class="mic b">&#9881;</div><div class="min"><h4>Settings</h4><p>Theme, notifications, downloads</p></div><span class="ma">&#8250;</span></div>
+      <div class="mi"><div class="mic g">&#128202;</div><div class="min"><h4>Progress Report</h4><p>Detailed analytics and insights</p></div><span class="ma">&#8250;</span></div>
+      <div class="mi"><div class="mic o">&#11015;</div><div class="min"><h4>Downloads</h4><p>Manage offline content</p></div><span class="ma">&#8250;</span></div>
+      <div class="mi" onclick="go('admin')"><div class="mic b">&#128274;</div><div class="min"><h4>Admin Panel</h4><p>Content management</p></div><span class="ma">&#8250;</span></div>
+      <div class="mi"><div class="mic r">&#128682;</div><div class="min"><h4>Logout</h4><p>Sign out of your account</p></div><span class="ma">&#8250;</span></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="scr" id="settings">
+    <div class="mh"><button class="bb" onclick="go('profile')">&#8249;</button><h3>Settings</h3><span></span></div>
+    <div class="stg">
+      <div class="sti2"><div class="mic b" style="margin-right:6px">&#127769;</div><div class="stgl"><h4>Dark Mode</h4><p>Switch between light and dark theme</p></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sti2"><div class="mic g" style="margin-right:6px">&#128276;</div><div class="stgl"><h4>Notifications</h4><p>Push notifications for new content</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sti2"><div class="mic o" style="margin-right:6px">&#11015;</div><div class="stgl"><h4>Auto Download</h4><p>Download content on WiFi only</p></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="sti2"><div class="mic b" style="margin-right:6px">&#127760;</div><div class="stgl"><h4>Language</h4><p>English (Urdu coming soon)</p></div><span class="ma">&#8250;</span></div>
+      <div style="height:16px"></div>
+      <div class="sti2"><div class="mic b" style="margin-right:6px">&#128196;</div><div class="stgl"><h4>Privacy Policy</h4></div><span class="ma">&#8250;</span></div>
+      <div class="sti2"><div class="mic b" style="margin-right:6px">&#128203;</div><div class="stgl"><h4>Terms & Conditions</h4></div><span class="ma">&#8250;</span></div>
+      <div class="sti2"><div class="mic g" style="margin-right:6px">&#8505;</div><div class="stgl"><h4>About App</h4><p>Version 1.0.0</p></div><span class="ma">&#8250;</span></div>
+      <div class="sti2"><div class="mic r" style="margin-right:6px">&#128465;</div><div class="stgl"><h4>Delete Account</h4></div><span class="ma">&#8250;</span></div>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="scr" id="search">
+    <div class="mh"><button class="bb" onclick="go('home')">&#8249;</button><h3>Search</h3><span></span></div>
+    <div class="sch"><div class="sbar"><span>&#128269;</span><input placeholder="Search subjects, notes, MCQs..." autofocus></div></div>
+    <div class="shist">
+      <div style="padding:12px 0;font-size:12px;font-weight:700;color:var(--ts);text-transform:uppercase;letter-spacing:1px">Recent Searches</div>
+      <div class="shi"><span>&#128336;</span><p>Cardiac cycle physiology</p><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="shi"><span>&#128336;</span><p>Upper limb anatomy MCQs</p><span style="color:var(--ts)">&#8250;</span></div>
+      <div class="shi"><span>&#128336;</span><p>DNA replication biochemistry</p><span style="color:var(--ts)">&#8250;</span></div>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS -->
+  <div class="scr" id="notif">
+    <div class="mh"><button class="bb" onclick="go('home')">&#8249;</button><h3>Notifications</h3><span></span></div>
+    <div class="nlst">
+      <div class="nit"><div class="nic" style="background:var(--pl)">&#128221;</div><div class="nin"><h4>New Notes Available</h4><p>Cardiac Cycle notes uploaded in Physiology</p></div><span class="ntm">2m</span></div>
+      <div class="nit"><div class="nic" style="background:var(--al)">&#127919;</div><div class="nin"><h4>Quiz Reminder</h4><p>You have a timed quiz scheduled for today</p></div><span class="ntm">1h</span></div>
+      <div class="nit"><div class="nic" style="background:#fef3c7">&#128227;</div><div class="nin"><h4>Announcement</h4><p>New past papers added for 1st Year MBBS</p></div><span class="ntm">3h</span></div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="scr" id="admin">
+    <div class="ahd"><h2>Admin Dashboard</h2><p>Manage all app content from here</p></div>
+    <div class="ag">
+      <div class="adc"><div class="adi" style="background:var(--pl)">&#128101;</div><h4>Students</h4><p>Registered users</p><span class="adn">1,240</span></div>
+      <div class="adc"><div class="adi" style="background:var(--al)">&#128197;</div><h4>Years</h4><p>Academic years</p><span class="adn">5</span></div>
+      <div class="adc"><div class="adi" style="background:#fef3c7">&#128214;</div><h4>Subjects</h4><p>Total subjects</p><span class="adn">42</span></div>
+      <div class="adc"><div class="adi" style="background:#f3e8ff">&#128193;</div><h4>Chapters</h4><p>Total chapters</p><span class="adn">186</span></div>
+      <div class="adc"><div class="adi" style="background:#fef2f2">&#128221;</div><h4>MCQs</h4><p>Total questions</p><span class="adn">8,540</span></div>
+      <div class="adc"><div class="adi" style="background:var(--pl)">&#128229;</div><h4>Notes</h4><p>Documents uploaded</p><span class="adn">340</span></div>
+      <div class="adc"><div class="adi" style="background:var(--al)">&#127909;</div><h4>Videos</h4><p>Lecture videos</p><span class="adn">156</span></div>
+      <div class="adc"><div class="adi" style="background:#fef3c7">&#128196;</div><h4>Past Papers</h4><p>Exam papers</p><span class="adn">89</span></div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bn" id="bottomNav">
+    <button class="ni on" onclick="goNav('home',0)"><span>&#127968;</span><span>Home</span></button>
+    <button class="ni" onclick="goNav('study',1)"><span>&#127891;</span><span>Study</span></button>
+    <button class="ni" onclick="goNav('mcqMenu',2)"><span>&#128221;</span><span>MCQs</span></button>
+    <button class="ni" onclick="goNav('bookmarks',3)"><span>&#128278;</span><span>Saved</span></button>
+    <button class="ni" onclick="goNav('profile',4)"><span>&#128100;</span><span>Profile</span></button>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+let currentScreen = 'splash';
+let navIndex = 0;
+
+function go(screen) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
+  currentScreen = screen;
+  updateNav(screen);
+}
+
+function goNav(screen, index) {
+  navIndex = index;
+  go(screen);
+}
+
+function updateNav(screen) {
+  const navMap = { home: 0, study: 1, subjects: 1, chapters: 1, pdf: 1, mcqMenu: 2, mcq: 2, result: 2, bookmarks: 3, profile: 4, settings: 4, admin: 4 };
+  const idx = navMap[screen];
+  if (idx !== undefined) {
+    document.querySelectorAll('.ni').forEach((n, i) => n.classList.toggle('on', i === idx));
+  }
+  const hideNav = ['splash','ob1','ob2','ob3','login','register','forgot','search','notif'];
+  document.getElementById('bottomNav').style.display = hideNav.includes(screen) ? 'none' : 'flex';
+}
+
+function doLogin() {
+  toast('Welcome back, Ahmed!');
+  go('home');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 2500);
+}
+
+// Auto-navigate splash
+setTimeout(() => go('ob1'), 2500);
+</script>
+</body>
+</html>
